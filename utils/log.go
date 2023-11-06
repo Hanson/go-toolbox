@@ -50,7 +50,7 @@ func GetMultiWriter(split int) io.Writer {
 		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("2006-01-02-15"))
 	}
 
-	f, err := os.OpenFile(fmt.Sprintf("logs/%s.txt", fileName), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
