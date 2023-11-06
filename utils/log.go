@@ -24,20 +24,33 @@ func KeepNewDateLogFile() {
 		case <-ticker.C:
 			now := time.Now()
 			if now.Hour() == 0 && now.Minute() == 0 {
-				log.SetOutput(GetMultiWriter())
+				log.SetOutput(GetMultiWriter(DAY))
 			}
 		}
 	}()
 }
 
-func GetMultiWriter() io.Writer {
+const (
+	DAY = iota
+	HOUR
+)
+
+func GetMultiWriter(split int) io.Writer {
 	err := gFile.CreateDirIfNotExists("logs", 0777)
 	if err != nil {
 		log.Printf("err: %+v", err)
 		panic(err)
 	}
 
-	f, err := os.OpenFile(fmt.Sprintf("logs/%s.txt", time.Now().Format("2006-01-02")), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	var fileName string
+	switch split {
+	case DAY:
+		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("2006-01-02"))
+	case HOUR:
+		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("2006-01-02-15"))
+	}
+
+	f, err := os.OpenFile(fmt.Sprintf("logs/%s.txt", fileName), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
