@@ -45,9 +45,9 @@ func GetMultiWriter(split int) io.Writer {
 	var fileName string
 	switch split {
 	case DAY:
-		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("2006-01-02"))
+		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("20060102"))
 	case HOUR:
-		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("2006-01-02-15"))
+		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("2006010215"))
 	}
 
 	f, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
