@@ -33,6 +33,7 @@ func KeepNewDateLogFile() {
 const (
 	DAY = iota
 	HOUR
+	MINUTE
 )
 
 func GetMultiWriter(split int) io.Writer {
@@ -48,6 +49,8 @@ func GetMultiWriter(split int) io.Writer {
 		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("20060102"))
 	case HOUR:
 		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("2006010215"))
+	case MINUTE:
+		fileName = fmt.Sprintf("logs/%s.txt", time.Now().Format("200601021504"))
 	}
 
 	f, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
