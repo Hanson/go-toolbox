@@ -2,6 +2,8 @@ package utils
 
 import (
 	"math/rand"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -38,4 +40,12 @@ func RandStr(length int64, mod uint32) string {
 	}
 
 	return string(bytes)
+}
+
+func IsNumeric(str string, trim bool) bool {
+	if trim {
+		str = strings.TrimSpace(str)
+	}
+	_, err := strconv.Atoi(str)
+	return err == nil
 }
