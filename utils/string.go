@@ -2,6 +2,7 @@ package utils
 
 import (
 	"math/rand"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -48,4 +49,10 @@ func IsNumeric(str string, trim bool) bool {
 	}
 	_, err := strconv.Atoi(str)
 	return err == nil
+}
+
+// 移除连着的换行符，最多保留一个，目前用于AI场景
+func RemoveNewline(str string) string {
+	re := regexp.MustCompile(`\n{2,}`)
+	return re.ReplaceAllString(str, "\n")
 }
