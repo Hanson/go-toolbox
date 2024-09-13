@@ -17,6 +17,15 @@ type Process struct {
 func NewProcessByName(name string) (p *Process, err error) {
 	pid := GetPidByName(name)
 
+	p, err = NewProcessByPid(pid)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func NewProcessByPid(pid int) (p *Process, err error) {
 	handle, err := windows.OpenProcess(0x000F0000|0x00100000|0xFFF, false, uint32(pid))
 	if err != nil {
 		return
