@@ -5,7 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func SubStr(s string, max int) string {
@@ -22,22 +21,30 @@ const (
 	RandomStringModNumber
 )
 
-func RandStr(length int64, mod uint32) string {
-	var strKey string
-	if mod == RandomStringModNumberPlusLetter {
-		strKey = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	} else if mod == RandomStringModNumberPlusLetterPlusSymbol {
-		strKey = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*(){}|\\[]?/"
-	} else if mod == RandomStringModNumber {
-		strKey = "0123456789"
-	} else {
-		strKey = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+var (
+	numberPlusLetter       = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	numberPlusLetterSymbol = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*(){}|\\[]?/")
+	numberOnly             = []byte("0123456789")
+)
+
+func RandStr(length int, mod uint32) string {
+	var key []byte
+
+	switch mod {
+	case RandomStringModNumberPlusLetter:
+		key = numberPlusLetter
+	case RandomStringModNumberPlusLetterPlusSymbol:
+		key = numberPlusLetterSymbol
+	case RandomStringModNumber:
+		key = numberOnly
+	default:
+		key = numberPlusLetter
 	}
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	// 使用全局随机源，避免频繁创建
 	bytes := make([]byte, length)
 	for i := range bytes {
-		bytes[i] = strKey[r.Intn(len(strKey))]
+		bytes[i] = key[rand.Intn(len(key))]
 	}
 
 	return string(bytes)
