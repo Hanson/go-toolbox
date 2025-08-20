@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -59,4 +60,38 @@ func GetMultiWriter(split int) io.Writer {
 	}
 
 	return io.MultiWriter(os.Stdout, f)
+}
+
+func RemoveExpireLog(hours int) {
+	dirPath := "logs"
+	// 计算截止时间
+	cutoffTime := time.Now().Add(-time.Duration(hours) * time.Hour)
+
+	// 读取目录
+	files, err := os.ReadDir(dirPath)
+	if err != nil {
+		return
+	}
+
+	for _, file := range files {
+		if file.IsDir() {
+			continue // 跳过目录
+		}
+
+		// 获取文件的详细信息
+		info, err := file.Info()
+		if err != nil {
+			continue
+		}
+
+		filePath := filepath.Join(dirPath, file.Name())
+
+		// 检查文件修改时间
+		if info.ModTime().Before(cutoffTime) {
+			err := os.Remove(filePath)
+			if err != nil {
+				return
+			}
+		}
+	}
 }
